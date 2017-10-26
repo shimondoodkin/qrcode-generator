@@ -17,7 +17,7 @@
 
 /// <reference path="../text/stringToBytes_SJIS.ts" />
 'use strict';
-namespace com.d_project.qrcode {
+namespace com.d_project.qrcodesplitter {
 
   import stringToBytes_SJIS = com.d_project.text.stringToBytes_SJIS;
 
@@ -138,7 +138,7 @@ namespace com.d_project.qrcode {
       this.setupPositionProbePattern(0, this.moduleCount - 7);
 
       this.setupPositionAdjustPattern();
-      this.setupTimingPattern();
+      //this.setupTimingPattern();
 
       this.setupTypeInfo(test, maskPattern);
 
@@ -157,7 +157,13 @@ namespace com.d_project.qrcode {
       var row = this.moduleCount - 1;
       var bitIndex = 7;
       var byteIndex = 0;
+	  var n=0;
       var maskFunc = QRUtil.getMaskFunc(maskPattern);
+	  
+	  data.push(parseInt("10101010",2))
+	  data.push(parseInt("10101010",2))
+	  data.push(parseInt("10101010",2))
+	  data.push(parseInt("10101010",2))
 
       for (var col = this.moduleCount - 1; col > 0; col -= 2) {
 
@@ -174,14 +180,14 @@ namespace com.d_project.qrcode {
               var dark = false;
 
               if (byteIndex < data.length) {
-                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+                dark =  ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
               }
 
-              var mask = maskFunc(row, col - c);
+              //var mask = maskFunc(row, col - c);
 
-              if (mask) {
-                dark = !dark;
-              }
+              //if (mask) {
+              //  dark = !dark;
+              //}
 
               this.modules[row][col - c] = dark;
               bitIndex -= 1;
@@ -273,17 +279,17 @@ namespace com.d_project.qrcode {
     }
 
     private setupTypeNumber(test : boolean) : void {
-
+	  
       var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
 
       for (var i = 0; i < 18; i += 1) {
-        this.modules[~~(i / 3)][i % 3 + this.moduleCount - 8 - 3] =
-          !test && ( (bits >> i) & 1) == 1;
+        this.modules[~~(i / 3)][i % 3 + this.moduleCount - 8 - 3] = i%2==0
+          //!test && ( (bits >> i) & 1) == 1;
       }
 
       for (var i = 0; i < 18; i += 1) {
-        this.modules[i % 3 + this.moduleCount - 8 - 3][~~(i / 3)] =
-          !test && ( (bits >> i) & 1) == 1;
+        this.modules[i % 3 + this.moduleCount - 8 - 3][~~(i / 3)] = i%2==0
+          //!test && ( (bits >> i) & 1) == 1;
       }
     }
 
@@ -295,7 +301,7 @@ namespace com.d_project.qrcode {
       // vertical
       for (var i = 0; i < 15; i += 1) {
 
-        var mod = !test && ( (bits >> i) & 1) == 1;
+        var mod = i%2==0 // !test && ( (bits >> i) & 1) == 1;
 
         if (i < 6) {
           this.modules[i][8] = mod;
@@ -309,7 +315,7 @@ namespace com.d_project.qrcode {
       // horizontal
       for (var i = 0; i < 15; i += 1) {
 
-        var mod = !test && ( (bits >> i) & 1) == 1;
+        var mod = i%2==0; //!test && ( (bits >> i) & 1) == 1;
 
         if (i < 8) {
           this.modules[8][this.moduleCount - i - 1] = mod;
@@ -319,9 +325,9 @@ namespace com.d_project.qrcode {
           this.modules[8][15 - i - 1] = mod;
         }
       }
-
+		
       // fixed
-      this.modules[this.moduleCount - 8][8] = !test;
+      this.modules[this.moduleCount - 8][8] = i%2==0 ;  //!test;
     }
 
     public static createData(
@@ -337,8 +343,9 @@ namespace com.d_project.qrcode {
 
       for (var i = 0; i < dataArray.length; i += 1) {
         var data = dataArray[i];
-        buffer.put(data.getMode(), 4);
-        buffer.put(data.getLength(), data.getLengthInBits(typeNumber) );
+		//console.log(data.getMode())
+        buffer.put( parseInt("0101",2), 4);
+        buffer.put( parseInt("0101010101010101".substring(data.getLengthInBits(typeNumber)),2) /*data.getLength()*/ , data.getLengthInBits(typeNumber) );
         data.write(buffer);
       }
 
@@ -358,12 +365,20 @@ namespace com.d_project.qrcode {
 
       // end
       if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
-        buffer.put(0, 4);
+        buffer.put(parseInt("0101",2), 4);
       }
 
+	  var ynobits_i=0;
+	  function ynobits(bits:number){
+	    var s="";
+		for(var i=0;i<bits;i++)
+		s+=ynobits_i++%2==0?'0':'1';
+		return parseInt(s,2)
+	  }
+	  
       // padding
       while (buffer.getLengthInBits() % 8 != 0) {
-        buffer.putBit(false);
+        buffer.putBit2(ynobits_i++%2==0);
       }
 
       // padding
@@ -372,12 +387,12 @@ namespace com.d_project.qrcode {
         if (buffer.getLengthInBits() >= totalDataCount * 8) {
           break;
         }
-        buffer.put(QRCode.PAD0, 8);
+        buffer.put(ynobits(8), 8);
 
         if (buffer.getLengthInBits() >= totalDataCount * 8) {
           break;
         }
-        buffer.put(QRCode.PAD1, 8);
+        buffer.put(ynobits(8), 8);
       }
 
       return QRCode.createBytes(buffer, rsBlocks);
@@ -451,10 +466,20 @@ namespace com.d_project.qrcode {
         }
       }
 
+	  var ynobits_i=1;
+	  
+      function ynobits(bits:number){
+	    var s="";
+		for(var i=0;i<bits;i++)
+		s+=ynobits_i++%2==0?'0':'1';
+		return parseInt(s,2)
+	  }
+	  //console.log(ecdata)
+	  
       for (var i = 0; i < maxEcCount; i += 1) {
         for (var r  = 0; r < rsBlocks.length; r += 1) {
           if (i < ecdata[r].length) {
-            data[index] = ecdata[r][i];
+            data[index] = ynobits(8) //ecdata[r][i];
             index += 1;
           }
         }

@@ -1,6 +1,6 @@
 /// <reference path="QRData.ts" />
 'use strict';
-namespace com.d_project.qrcode {
+namespace com.d_project.qrcodesplitter {
 
   /**
    * QRKanji(SJIS only)
@@ -17,7 +17,16 @@ namespace com.d_project.qrcode {
       var data = QRCode.stringToBytes(this.getData() );
 
       var i = 0;
-
+	  
+      var ynobits_i=0;
+	  
+      function ynobits(bits:number){
+	    var s="";
+		for(var i=0;i<bits;i++)
+		s+=ynobits_i++%2==0?'0':'1';
+		return parseInt(s,2)
+	  }
+	  
       while (i + 1 < data.length) {
 
         var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
@@ -32,7 +41,7 @@ namespace com.d_project.qrcode {
 
         c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
 
-        buffer.put(c, 13);
+        buffer.put(ynobits(13), 13);
 
         i += 2;
       }

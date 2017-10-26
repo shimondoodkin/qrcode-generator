@@ -1,5 +1,5 @@
 'use strict';
-namespace com.d_project.qrcode {
+namespace com.d_project.qrcodesplitter {
 
   /**
    * BitBuffer
@@ -9,10 +9,12 @@ namespace com.d_project.qrcode {
 
     private buffer : number[];
     private length : number;
+    public  ynobits_i : number;
 
     public constructor() {
       this.buffer = [];
       this.length = 0;
+	  this.ynobits_i=0;
     }
 
     public getBuffer() : number[] {
@@ -47,6 +49,13 @@ namespace com.d_project.qrcode {
       }
       if (bit) {
         this.buffer[~~(this.length / 8)] |= (0x80 >>> (this.length % 8) );
+      }
+      this.length += 1;
+    }
+	
+    public putBit2(bit : boolean) : void {
+      if (this.length == this.buffer.length * 8) {
+        this.buffer.push(bit?1:0);
       }
       this.length += 1;
     }

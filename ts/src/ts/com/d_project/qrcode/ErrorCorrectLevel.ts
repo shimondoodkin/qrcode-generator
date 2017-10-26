@@ -1,5 +1,5 @@
 'use strict';
-namespace com.d_project.qrcode {
+namespace com.d_project.qrcodesplitter {
 
   /**
    * ErrorCorrectLevel

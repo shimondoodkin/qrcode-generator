@@ -1,6 +1,6 @@
 /// <reference path="QRData.ts" />
 'use strict';
-namespace com.d_project.qrcode {
+namespace com.d_project.qrcodesplitter {
 
   /**
    * QRAlphaNum
@@ -17,16 +17,24 @@ namespace com.d_project.qrcode {
       var s = this.getData();
 
       var i = 0;
-
+	  
+	  var ynobits_i=0;
+	  
+      function ynobits(bits:number){
+	    var s="";
+		for(var i=0;i<bits;i++)
+		s+=ynobits_i++%2==0?'0':'1';
+		return parseInt(s,2)
+	  }
+	  
       while (i + 1 < s.length) {
         buffer.put(
-          QRAlphaNum.getCode(s.charAt(i) ) * 45 +
-          QRAlphaNum.getCode(s.charAt(i + 1) ), 11);
+          ynobits(11), 11);
         i += 2;
       }
 
       if (i < s.length) {
-        buffer.put(QRAlphaNum.getCode(s.charAt(i) ), 6);
+        buffer.put(ynobits(6), 6);
       }
     }
 
