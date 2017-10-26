@@ -442,11 +442,13 @@ var qrcode = function() {
           }
 
           if (buffer.getLengthInBits() <= totalDataCount * 8) {
+			  
             break;
           }
         }
 
         _typeNumber = typeNumber;
+		_this.typeNumber=typeNumber;
       }
 
       makeImpl(false, getBestMaskPattern() );
