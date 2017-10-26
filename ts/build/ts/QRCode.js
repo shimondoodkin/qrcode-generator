@@ -967,14 +967,14 @@ var com;
                 QRCode.prototype.getModuleCount = function () {
                     return this.moduleCount;
                 };
-                QRCode.prototype.make = function () {
-                    this.makeImpl(false, this.getBestMaskPattern());
+                QRCode.prototype.make = function (onlyrects) {
+                    this.makeImpl(false, this.getBestMaskPattern(onlyrects), onlyrects);
                 };
-                QRCode.prototype.getBestMaskPattern = function () {
+                QRCode.prototype.getBestMaskPattern = function (onlyrects) {
                     var minLostPoint = 0;
                     var pattern = 0;
                     for (var i = 0; i < 8; i += 1) {
-                        this.makeImpl(true, i);
+                        this.makeImpl(true, i, onlyrects);
                         var lostPoint = qrcodesplitter.QRUtil.getLostPoint(this);
                         if (i == 0 || minLostPoint > lostPoint) {
                             minLostPoint = lostPoint;
@@ -983,7 +983,7 @@ var com;
                     }
                     return pattern;
                 };
-                QRCode.prototype.makeImpl = function (test, maskPattern) {
+                QRCode.prototype.makeImpl = function (test, maskPattern, onlyrects) {
                     this.moduleCount = this.typeNumber * 4 + 17;
                     this.modules = [];
                     for (var i = 0; i < this.moduleCount; i += 1) {
@@ -996,6 +996,8 @@ var com;
                     this.setupPositionProbePattern(this.moduleCount - 7, 0);
                     this.setupPositionProbePattern(0, this.moduleCount - 7);
                     this.setupPositionAdjustPattern();
+                    if (onlyrects)
+                        return;
                     this.setupTypeInfo(test, maskPattern);
                     if (this.typeNumber >= 7) {
                         this.setupTypeNumber(test);

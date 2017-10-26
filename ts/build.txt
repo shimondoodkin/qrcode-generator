@@ -11,6 +11,6 @@ it will create a file ./build/ts/QRCode.js
 
 to create a test file:
 
-tsc src/ts/test.ts --outDir build/ts/test ;  rmdir -r ./build/ts/test/com
+tsc src/ts/test.ts --outDir build/ts/test ; mv ./build/ts/test/test.js ./build/ts/test.js ; rmdir -r ./build/ts/test
 
 it will create a file ./build/ts/test.js

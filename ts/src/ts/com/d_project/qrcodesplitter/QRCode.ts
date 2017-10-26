@@ -97,18 +97,18 @@ namespace com.d_project.qrcodesplitter {
       return this.moduleCount;
     }
 
-    public make() : void {
-      this.makeImpl(false, this.getBestMaskPattern() );
+    public make(onlyrects: boolean) : void {
+      this.makeImpl(false, this.getBestMaskPattern(onlyrects) , onlyrects );
     }
 
-    private getBestMaskPattern() : number {
+    private getBestMaskPattern(onlyrects: boolean) : number {
 
       var minLostPoint = 0;
       var pattern = 0;
 
       for (var i = 0; i < 8; i += 1) {
 
-        this.makeImpl(true, i);
+        this.makeImpl(true, i, onlyrects);
 
         var lostPoint = QRUtil.getLostPoint(this);
 
@@ -121,7 +121,7 @@ namespace com.d_project.qrcodesplitter {
       return pattern;
     }
 
-    private makeImpl(test : boolean, maskPattern : number) : void {
+    private makeImpl(test : boolean, maskPattern : number, onlyrects: boolean) : void {
 
       // initialize modules
       this.moduleCount = this.typeNumber * 4 + 17;
@@ -139,7 +139,8 @@ namespace com.d_project.qrcodesplitter {
 
       this.setupPositionAdjustPattern();
       //this.setupTimingPattern();
-
+	  if(onlyrects) return;
+	  
       this.setupTypeInfo(test, maskPattern);
 
       if (this.typeNumber >= 7) {
