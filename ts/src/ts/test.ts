@@ -1,19 +1,40 @@
-/// <reference path="com/d_project/qrcode/QRCode" />
-/// <reference path="com/d_project/qrcode/ErrorCorrectLevel" />
-/// <reference path="com/d_project/qrcode/QRNumber" />
-/// <reference path="com/d_project/qrcode/QRAlphaNum" />
-/// <reference path="com/d_project/qrcode/QR8BitByte" />
-/// <reference path="com/d_project/qrcode/QRKanji" />
+///<reference path="com/d_project/image/GIFImage" />
+///<reference path="com/d_project/io/Base64" />
+///<reference path="com/d_project/io/Base64DecodeInputStream" />
+///<reference path="com/d_project/io/Base64EncodeOutputStream" />
+///<reference path="com/d_project/io/ByteArrayInputStream" />
+///<reference path="com/d_project/io/ByteArrayOutputStream" />
+///<reference path="com/d_project/io/InputStream" />
+///<reference path="com/d_project/io/OutputStream" />
+///<reference path="com/d_project/qrcodesplitter/BitBuffer" />
+///<reference path="com/d_project/qrcodesplitter/ErrorCorrectLevel" />
+///<reference path="com/d_project/qrcodesplitter/MaskPattern" />
+///<reference path="com/d_project/qrcodesplitter/Mode" />
+///<reference path="com/d_project/qrcodesplitter/Polynomial" />
+///<reference path="com/d_project/qrcodesplitter/QR8BitByte" />
+///<reference path="com/d_project/qrcodesplitter/QRAlphaNum" />
+///<reference path="com/d_project/qrcodesplitter/QRCode" />
+///<reference path="com/d_project/qrcodesplitter/QRData" />
+///<reference path="com/d_project/qrcodesplitter/QRKanji" />
+///<reference path="com/d_project/qrcodesplitter/QRMath" />
+///<reference path="com/d_project/qrcodesplitter/QRNumber" />
+///<reference path="com/d_project/qrcodesplitter/QRUtil" />
+///<reference path="com/d_project/qrcodesplitter/RSBlock" />
+///<reference path="com/d_project/text/createStringToBytes" />
+///<reference path="com/d_project/text/stringToBytes_SJIS" />
+///<reference path="com/d_project/text/stringToBytes_UTF8" />
 
+
+ 
 'use strict'
 namespace test {
 
-  import QRCode = com.d_project.qrcode.QRCode;
-  import ErrorCorrectLevel = com.d_project.qrcode.ErrorCorrectLevel;
-  import QRNumber = com.d_project.qrcode.QRNumber;
-  import QRAlphaNum = com.d_project.qrcode.QRAlphaNum;
-  import QR8BitByte = com.d_project.qrcode.QR8BitByte;
-  import QRKanji = com.d_project.qrcode.QRKanji;
+  import QRCode = com.d_project.qrcodesplitter.QRCode;
+  import ErrorCorrectLevel = com.d_project.qrcodesplitter.ErrorCorrectLevel;
+  import QRNumber = com.d_project.qrcodesplitter.QRNumber;
+  import QRAlphaNum = com.d_project.qrcodesplitter.QRAlphaNum;
+  import QR8BitByte = com.d_project.qrcodesplitter.QR8BitByte;
+  import QRKanji = com.d_project.qrcodesplitter.QRKanji;
 
   export function run() : void {
 

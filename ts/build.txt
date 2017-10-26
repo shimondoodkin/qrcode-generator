@@ -6,4 +6,11 @@ run in this folder
 
 tsc -p .
 
-it will create a file in build folder
+it will create a file ./build/ts/QRCode.js
+
+
+to create a test file:
+
+tsc src/ts/test.ts --outDir build/ts/test ;  rmdir -r ./build/ts/test/com
+
+it will create a file ./build/ts/test.js
