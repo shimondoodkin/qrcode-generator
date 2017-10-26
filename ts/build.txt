@@ -1,0 +1,9 @@
+to buld install typescript by
+
+npm install -g typescript
+
+run in this folder
+
+tsc -p .
+
+it will create a file in build folder
